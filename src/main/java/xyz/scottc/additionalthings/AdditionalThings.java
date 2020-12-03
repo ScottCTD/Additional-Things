@@ -11,6 +11,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import xyz.scottc.additionalthings.blocks.diamondgenerator.ScreenDiamondGenerator;
 import xyz.scottc.additionalthings.blocks.placer.ScreenPlacer;
 import xyz.scottc.additionalthings.registries.BlockRegistry;
 import xyz.scottc.additionalthings.registries.ContainerTypeRegistry;
@@ -53,5 +54,6 @@ public class AdditionalThings {
 
     private void doClientStuff(final FMLClientSetupEvent event) {
         ScreenManager.registerFactory(ContainerTypeRegistry.PLACER.get(), ScreenPlacer::new);
+        ScreenManager.registerFactory(ContainerTypeRegistry.DIAMOND_GENERATOR.get(), ScreenDiamondGenerator::new);
     }
 }

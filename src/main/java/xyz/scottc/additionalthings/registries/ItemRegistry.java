@@ -16,4 +16,6 @@ public class ItemRegistry {
             () -> new BlockItem(BlockRegistry.BREAKER.get(), new Item.Properties().group(AdditionalThings.ITEM_TABLE)));
     public static final RegistryObject<Item> PLACER = ITEMS.register("placer",
             () -> new BlockItem(BlockRegistry.PLACER.get(), new Item.Properties().group(AdditionalThings.ITEM_TABLE)));
+    public static final RegistryObject<Item> DIAMOND_GENERATOR = ITEMS.register("diamond_generator",
+            () -> new BlockItem(BlockRegistry.DIAMOND_GENERATOR.get(), new Item.Properties().group(AdditionalThings.ITEM_TABLE)));
 }

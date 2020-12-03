@@ -25,6 +25,8 @@ public class TileentityPlacer extends TileEntity implements ITickableTileEntity 
     @Override
     public void tick() {
         if (this.world != null) {
+            // We just want it happens on server
+            if (this.world.isRemote) return;
             if (!this.world.isBlockPowered(this.pos)) {
                 this.world.setBlockState(this.pos, this.getBlockState().with(BlockPlacer.START, false));
                 return;

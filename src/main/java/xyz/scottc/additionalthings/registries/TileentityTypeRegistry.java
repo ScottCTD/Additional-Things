@@ -6,6 +6,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import xyz.scottc.additionalthings.AdditionalThings;
 import xyz.scottc.additionalthings.blocks.breaker.TileentityBreaker;
+import xyz.scottc.additionalthings.blocks.diamondgenerator.TileentityDiamondGenerator;
 import xyz.scottc.additionalthings.blocks.placer.TileentityPlacer;
 
 public class TileentityTypeRegistry {
@@ -17,4 +18,6 @@ public class TileentityTypeRegistry {
             () -> TileEntityType.Builder.create(TileentityBreaker::new, BlockRegistry.BREAKER.get()).build(null));
     public static final RegistryObject<TileEntityType<TileentityPlacer>> PLACER = TILEENTITIES.register("placer",
             () -> TileEntityType.Builder.create(TileentityPlacer::new, BlockRegistry.PLACER.get()).build(null));
+    public static final RegistryObject<TileEntityType<TileentityDiamondGenerator>> DIAMOND_GENERATOR = TILEENTITIES.register("diamond_generator",
+            () -> TileEntityType.Builder.create(TileentityDiamondGenerator::new, BlockRegistry.DIAMOND_GENERATOR.get()).build(null));
 }

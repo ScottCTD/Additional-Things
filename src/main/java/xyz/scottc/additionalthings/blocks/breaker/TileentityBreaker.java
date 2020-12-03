@@ -23,6 +23,7 @@ public class TileentityBreaker extends TileEntity implements ITickableTileEntity
         if (this.temp != this.ticks) return;
         this.temp = 0;
         if (this.world != null) {
+            if (this.world.isRemote) return;
             if (!this.world.isBlockPowered(this.pos)) {
                 // update block state
                 this.world.setBlockState(this.pos, this.getBlockState().with(BlockBreaker.START, false));
