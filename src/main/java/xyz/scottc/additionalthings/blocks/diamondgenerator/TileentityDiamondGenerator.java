@@ -30,13 +30,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class TileentityDiamondGenerator extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
 
-    private ItemStackHandler itemHandler = this.createItemHandler();
-    private ATEnergyStorage energyStorage = this.createEnergyStorage();
+    static final int CAPACITY = 100000;
+    private static final int MAX_TRANSFER_PER_TICK = 500;
+    private static final int FE_PER_DIAMOND = 10000;
+    private static final int TICKS_PER_DIAMOND = 20 * 10;
 
-    private LazyOptional<IItemHandler> item = LazyOptional.of(() -> this.itemHandler);
-    private LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> this.energyStorage);
+    private final ItemStackHandler itemHandler = this.createItemHandler();
+    private final ATEnergyStorage energyStorage = this.createEnergyStorage();
 
-    private int counter;
+    private final LazyOptional<IItemHandler> item = LazyOptional.of(() -> this.itemHandler);
+    private final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> this.energyStorage);
+
+    private int counter = 0;
 
     public TileentityDiamondGenerator() {
         super(TileentityTypeRegistry.DIAMOND_GENERATOR.get());
@@ -44,25 +49,45 @@ public class TileentityDiamondGenerator extends TileEntity implements ITickableT
 
     @Override
     public void tick() {
-        this.counter++;
-        if (this.counter <= 5) return;
         if (this.world != null && !this.world.isRemote) {
-            // 每5tick都检测是否为钻石，如果是，产生能量
-            // 1钻石 = 100000 FE
+            /*
+            counter = 0 -> Not started yet
+            counter between 1 and 10 * 20 -> Processing
+            counter = 21 -> Finished
+            接收钻石 每个钻石总共产生10000FE
+            产生速率为 1000 / s -> 50 / tick
+             */
+            final int FEPerTick = FE_PER_DIAMOND / TICKS_PER_DIAMOND;
+
             ItemStack itemStack = this.itemHandler.getStackInSlot(0);
-            if (itemStack.getItem().equals(Items.DIAMOND)) {
-                int energyStored = this.energyStorage.getEnergyStored();
-                if (energyStored + 10000 <= this.energyStorage.getMaxEnergyStored()) {
-                    this.energyStorage.setEnergy(energyStored + 100000);
+            BlockState blockState = this.world.getBlockState(this.pos);
+            int energyStored = this.energyStorage.getEnergyStored();
+
+            if (!(energyStored >= CAPACITY)) {
+                if (itemStack.getItem().equals(Items.DIAMOND) && this.counter == 0) {
+                    this.counter++;
                     this.itemHandler.extractItem(0, 1, false);
-                    // 保存
-                    this.markDirty();
+                    this.world.setBlockState(this.pos, blockState.with(BlockDiamondGenerator.START, true));
+                }
+                if (this.counter > 0 && this.counter <= TICKS_PER_DIAMOND) {
+                    if (!(energyStored + FEPerTick > CAPACITY)) {
+                        this.counter++;
+                        this.energyStorage.setEnergy(energyStored + FEPerTick);
+                    } else {
+                        this.counter = TICKS_PER_DIAMOND + 1;
+                    }
+                }
+                if (this.counter > TICKS_PER_DIAMOND) {
+                    if (!this.itemHandler.getStackInSlot(0).getItem().equals(Items.DIAMOND)) {
+                        this.world.setBlockState(this.pos, blockState.with(BlockDiamondGenerator.START, false));
+                    }
+                    this.counter = 0;
                 }
             }
+
             // 向外push能量
             this.pushEnergy();
         }
-        this.counter = 0;
     }
 
     private void pushEnergy() {
@@ -79,7 +104,7 @@ public class TileentityDiamondGenerator extends TileEntity implements ITickableT
                         capability.ifPresent(iEnergyStorage -> {
                             if (iEnergyStorage.canReceive()) {
                                 // 目标机器接收到了能量
-                                int received = iEnergyStorage.receiveEnergy(Math.min(availableEnergy.get(), 100000), false);
+                                int received = iEnergyStorage.receiveEnergy(Math.min(availableEnergy.get(), MAX_TRANSFER_PER_TICK), false);
                                 // 减少当前机器的能量
                                 availableEnergy.getAndAdd(-received);
                                 this.energyStorage.setEnergy(availableEnergy.get());
@@ -117,7 +142,7 @@ public class TileentityDiamondGenerator extends TileEntity implements ITickableT
     }
 
     private ATEnergyStorage createEnergyStorage() {
-        return new ATEnergyStorage(1000000) {
+        return new ATEnergyStorage(CAPACITY) {
             @Override
             protected void onEnergyChanged() {
                 markDirty();
@@ -156,7 +181,7 @@ public class TileentityDiamondGenerator extends TileEntity implements ITickableT
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT nbt) {
+    public void read(@NotNull BlockState state, CompoundNBT nbt) {
         this.itemHandler.deserializeNBT(nbt.getCompound("inv"));
         this.energyStorage.deserializeNBT(nbt.getCompound("energy"));
         this.counter = nbt.getInt("counter");
@@ -164,7 +189,7 @@ public class TileentityDiamondGenerator extends TileEntity implements ITickableT
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public @NotNull CompoundNBT write(CompoundNBT compound) {
         compound.put("inv", this.itemHandler.serializeNBT());
         compound.put("energy", this.energyStorage.serializeNBT());
         compound.putInt("counter", this.counter);

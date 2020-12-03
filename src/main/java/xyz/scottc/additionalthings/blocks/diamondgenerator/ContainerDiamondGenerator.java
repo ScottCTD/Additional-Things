@@ -1,5 +1,6 @@
 package xyz.scottc.additionalthings.blocks.diamondgenerator;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -106,6 +107,10 @@ public class ContainerDiamondGenerator extends Container {
 
     int getEnergy() {
         return this.tile.getCapability(CapabilityEnergy.ENERGY).map(IEnergyStorage::getEnergyStored).orElse(0);
+    }
+
+    BlockState getBlockState() {
+        return this.tile.getBlockState();
     }
 
     @Override

@@ -3,9 +3,12 @@
 
   "block.additionalthings.breaker": "Breaker",
   "block.additionalthings.placer": "Placer",
+  "block.additionalthings.diamond_generator": "Diamond Generator",
 
   "item.additionalthings.breaker": "Breaker",
   "item.additionalthings.placer": "Placer",
+  "item.additionalthings.diamond_generator": "Diamond Generator",
 
-  "screen.additionalthings.placer": "Placer"
+  "screen.additionalthings.placer": "Placer",
+  "screen.additionalthings.diamond_generator": "Diamond Generator"
 }
