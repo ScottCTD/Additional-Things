@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "additionalthings:block/breaker/breaker_start"
+  }
+}

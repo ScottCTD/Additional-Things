@@ -1,0 +1,53 @@
+{
+  "variants": {
+    "facing=north,start=false": {
+      "model": "additionalthings:block/breaker/breaker"
+    },
+    "facing=north,start=true": {
+      "model": "additionalthings:block/breaker/breaker_start"
+    },
+
+    "facing=east,start=false": {
+      "model": "additionalthings:block/breaker/breaker",
+      "y": 90
+    },
+    "facing=east,start=true": {
+      "model": "additionalthings:block/breaker/breaker_start",
+      "y": 90
+    },
+
+    "facing=south,start=false": {
+      "model": "additionalthings:block/breaker/breaker",
+      "y": 180
+    },
+    "facing=south,start=true": {
+      "model": "additionalthings:block/breaker/breaker_start",
+      "y": 180
+    },
+
+    "facing=west,start=false": {
+      "model": "additionalthings:block/breaker/breaker",
+      "y": 270
+    },
+    "facing=west,start=true": {
+      "model": "additionalthings:block/breaker/breaker_start",
+      "y": 270
+    },
+
+    "facing=up,start=false": {
+      "model": "additionalthings:block/breaker/breaker"
+    },
+    "facing=up,start=true": {
+      "model": "additionalthings:block/breaker/breaker_start"
+    },
+
+    "facing=down,start=false": {
+      "model": "additionalthings:block/breaker/breaker",
+      "x": 180
+    },
+    "facing=down,start=true": {
+      "model": "additionalthings:block/breaker/breaker_start",
+      "x": 180
+    }
+  }
+}
