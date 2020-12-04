@@ -23,6 +23,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xyz.scottc.additionalthings.AdditionalThings;
+import xyz.scottc.additionalthings.Config;
 import xyz.scottc.additionalthings.registries.TileentityTypeRegistry;
 import xyz.scottc.additionalthings.utils.ATEnergyStorage;
 
@@ -30,10 +31,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class TileentityDiamondGenerator extends TileEntity implements ITickableTileEntity, INamedContainerProvider {
 
-    static final int CAPACITY = 100000;
-    private static final int MAX_TRANSFER_PER_TICK = 500;
-    private static final int FE_PER_DIAMOND = 10000;
-    private static final int TICKS_PER_DIAMOND = 20 * 10;
+    static final int CAPACITY = Config.DIAMOND_GENERATOR_CAPACITY.get();
+    private static final int MAX_TRANSFER_PER_TICK = Config.DIAMOND_GENERATOR_MAX_TRANSFER_PER_TICK.get();
+    private static final int FE_PER_DIAMOND = Config.DIAMOND_GENERATOR_FE_PER_DIAMOND.get();
+    private static final int TICKS_PER_DIAMOND = Config.DIAMOND_GENERATOR_TICKS_PER_DIAMOND.get();
 
     private final ItemStackHandler itemHandler = this.createItemHandler();
     private final ATEnergyStorage energyStorage = this.createEnergyStorage();

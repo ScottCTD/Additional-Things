@@ -1,22 +1,18 @@
 package xyz.scottc.additionalthings;
 
-import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import xyz.scottc.additionalthings.blocks.diamondgenerator.ScreenDiamondGenerator;
-import xyz.scottc.additionalthings.blocks.placer.ScreenPlacer;
-import xyz.scottc.additionalthings.registries.BlockRegistry;
-import xyz.scottc.additionalthings.registries.ContainerTypeRegistry;
-import xyz.scottc.additionalthings.registries.ItemRegistry;
-import xyz.scottc.additionalthings.registries.TileentityTypeRegistry;
+import xyz.scottc.additionalthings.registries.*;
 
 @Mod(AdditionalThings.MODID)
 public class AdditionalThings {
@@ -33,6 +29,10 @@ public class AdditionalThings {
     };
 
     public AdditionalThings() {
+        // Load Config
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_CONFIG);
+
         final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.addListener(this::setup);
         bus.addListener(this::doClientStuff);
@@ -53,7 +53,6 @@ public class AdditionalThings {
     private void setup(final FMLCommonSetupEvent event) {}
 
     private void doClientStuff(final FMLClientSetupEvent event) {
-        ScreenManager.registerFactory(ContainerTypeRegistry.PLACER.get(), ScreenPlacer::new);
-        ScreenManager.registerFactory(ContainerTypeRegistry.DIAMOND_GENERATOR.get(), ScreenDiamondGenerator::new);
+        ScreenRegistry.register();
     }
 }
