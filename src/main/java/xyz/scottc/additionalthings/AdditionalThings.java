@@ -13,6 +13,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import xyz.scottc.additionalthings.registries.*;
+import xyz.scottc.additionalthings.utils.network.Network;
 
 @Mod(AdditionalThings.MODID)
 public class AdditionalThings {
@@ -34,8 +35,8 @@ public class AdditionalThings {
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_CONFIG);
 
         final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        bus.addListener(this::setup);
         bus.addListener(this::doClientStuff);
+        bus.addListener(this::setup);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -50,9 +51,12 @@ public class AdditionalThings {
         TileentityTypeRegistry.TILEENTITIES.register(bus);
     }
 
-    private void setup(final FMLCommonSetupEvent event) {}
+    private void setup(final FMLCommonSetupEvent event) {
+        Network.registerMessages();
+    }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
         ScreenRegistry.register();
     }
+
 }

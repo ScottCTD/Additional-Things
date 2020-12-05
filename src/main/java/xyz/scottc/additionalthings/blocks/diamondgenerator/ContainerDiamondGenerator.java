@@ -11,7 +11,6 @@ import net.minecraft.util.IntReferenceHolder;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import org.jetbrains.annotations.NotNull;
@@ -25,9 +24,10 @@ public class ContainerDiamondGenerator extends Container {
 
     public ContainerDiamondGenerator(int id, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
         super(ContainerTypeRegistry.DIAMOND_GENERATOR.get(), id);
-        tile = (TileentityDiamondGenerator) world.getTileEntity(pos);
+        this.tile = (TileentityDiamondGenerator) world.getTileEntity(pos);
 
-        if (tile != null) {
+        if (this.tile != null) {
+            this.trackIntArray(this.tile.data);
             // The slot in this one-slot machine
             this.tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(
                     iItemHandler -> this.addSlot(new SlotItemHandler(iItemHandler, 0, 79, 33)));
@@ -63,10 +63,11 @@ public class ContainerDiamondGenerator extends Container {
             index++;
         }
 
-        this.syncEnergy();
+        // this.syncEnergy();
     }
 
     // Sync the energy in the server and the client side
+    // No longer used, switching to the IIntArray
     private void syncEnergy() {
         // 这个负责传输后16位int
         this.trackInt(new IntReferenceHolder() {
@@ -106,7 +107,7 @@ public class ContainerDiamondGenerator extends Container {
     }
 
     int getEnergy() {
-        return this.tile.getCapability(CapabilityEnergy.ENERGY).map(IEnergyStorage::getEnergyStored).orElse(0);
+        return this.tile.data.energy;
     }
 
     BlockState getBlockState() {
@@ -141,4 +142,5 @@ public class ContainerDiamondGenerator extends Container {
     public boolean canInteractWith(@NotNull PlayerEntity playerIn) {
         return isWithinUsableDistance(IWorldPosCallable.of(playerIn.getEntityWorld(), this.tile.getPos()), playerIn, BlockRegistry.DIAMOND_GENERATOR.get());
     }
+
 }

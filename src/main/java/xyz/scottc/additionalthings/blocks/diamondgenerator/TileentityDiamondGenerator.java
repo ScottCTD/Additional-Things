@@ -38,9 +38,9 @@ public class TileentityDiamondGenerator extends TileEntity implements ITickableT
 
     private final ItemStackHandler itemHandler = this.createItemHandler();
     private final ATEnergyStorage energyStorage = this.createEnergyStorage();
-
     private final LazyOptional<IItemHandler> item = LazyOptional.of(() -> this.itemHandler);
     private final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> this.energyStorage);
+    public final DataDiamondGenerator data = new DataDiamondGenerator();
 
     private int counter = 0;
 
@@ -51,6 +51,7 @@ public class TileentityDiamondGenerator extends TileEntity implements ITickableT
     @Override
     public void tick() {
         if (this.world != null && !this.world.isRemote) {
+            this.data.set(DataDiamondGenerator.ENERGY_INDEX, this.energyStorage.getEnergyStored());
             /*
             counter = 0 -> Not started yet
             counter between 1 and 10 * 20 -> Processing
@@ -183,16 +184,16 @@ public class TileentityDiamondGenerator extends TileEntity implements ITickableT
 
     @Override
     public void read(@NotNull BlockState state, CompoundNBT nbt) {
+        this.data.read(nbt);
         this.itemHandler.deserializeNBT(nbt.getCompound("inv"));
-        this.energyStorage.deserializeNBT(nbt.getCompound("energy"));
         this.counter = nbt.getInt("counter");
         super.read(state, nbt);
     }
 
     @Override
     public @NotNull CompoundNBT write(CompoundNBT compound) {
+        this.data.write(compound);
         compound.put("inv", this.itemHandler.serializeNBT());
-        compound.put("energy", this.energyStorage.serializeNBT());
         compound.putInt("counter", this.counter);
         return super.write(compound);
     }

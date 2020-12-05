@@ -9,7 +9,6 @@ public class ScreenRegistry {
     public static void register() {
         ScreenManager.registerFactory(ContainerTypeRegistry.PLACER.get(), ScreenPlacer::new);
         ScreenManager.registerFactory(ContainerTypeRegistry.DIAMOND_GENERATOR.get(), ScreenDiamondGenerator::new);
-
     }
 
 }
