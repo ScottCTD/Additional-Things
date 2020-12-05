@@ -18,13 +18,15 @@ public class TileentityPlacer extends TileEntity implements ITickableTileEntity 
     // One Slot Inventory
     private final Inventory inventory= new Inventory(1);
 
+    public DataPlacer data = new DataPlacer();
+
     public TileentityPlacer() {
         super(TileentityTypeRegistry.PLACER.get());
     }
 
     @Override
     public void tick() {
-        if (this.world != null) {
+        if (this.world != null && this.data.get(DataPlacer.START_INDEX) >= 1) {
             // We just want it happens on server
             if (this.world.isRemote) return;
             if (!this.world.isBlockPowered(this.pos)) {
@@ -48,6 +50,7 @@ public class TileentityPlacer extends TileEntity implements ITickableTileEntity 
     // Read the nbt to load the item.
     @Override
     public void read(@NotNull BlockState state, CompoundNBT nbt) {
+        this.data.read(nbt);
         this.inventory.addItem(ItemStack.read(nbt.getCompound("itemstack")));
         super.read(state, nbt);
     }
@@ -55,6 +58,7 @@ public class TileentityPlacer extends TileEntity implements ITickableTileEntity 
     // Write the item in the inventory into nbt.
     @Override
     public @NotNull CompoundNBT write(CompoundNBT compound) {
+        this.data.write(compound);
         ItemStack itemStack = this.inventory.getStackInSlot(0).copy();
         compound.put("itemstack", itemStack.serializeNBT());
         return super.write(compound);

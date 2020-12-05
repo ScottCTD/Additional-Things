@@ -3,10 +3,16 @@ package xyz.scottc.additionalthings.blocks.placer;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import org.jetbrains.annotations.NotNull;
+import xyz.scottc.additionalthings.AdditionalThings;
 import xyz.scottc.additionalthings.registries.TexturesRegistry;
+import xyz.scottc.additionalthings.utils.network.Network;
+import xyz.scottc.additionalthings.utils.network.PacketStartPlacer;
 
 public class ScreenPlacer extends ContainerScreen<ContainerPlacer> {
 
@@ -17,6 +23,18 @@ public class ScreenPlacer extends ContainerScreen<ContainerPlacer> {
         super(screenContainer, inv, titleIn);
         this.xSize = textureWidth;
         this.ySize = textureHeight;
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        int fontHeight = this.font.FONT_HEIGHT;
+        int horizontalGap = 8, verticalGap = 4;
+
+        this.addButton(new Button(this.guiLeft + horizontalGap, this.guiTop + this.titleY + fontHeight,
+                this.font.getStringWidth(I18n.format("button." + AdditionalThings.MODID + ".placer.start")) + horizontalGap, fontHeight + 4,
+                new TranslationTextComponent("button." + AdditionalThings.MODID + ".placer.start"),
+                button -> Network.sendToServer(new PacketStartPlacer(!this.container.tile.data.start, this.container.tile.getPos()))));
     }
 
     @Override

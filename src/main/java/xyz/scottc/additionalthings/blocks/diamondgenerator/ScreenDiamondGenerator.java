@@ -7,7 +7,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import org.jetbrains.annotations.NotNull;
-import xyz.scottc.additionalthings.AdditionalThings;
 import xyz.scottc.additionalthings.registries.TexturesRegistry;
 
 public class ScreenDiamondGenerator extends ContainerScreen<ContainerDiamondGenerator> {
@@ -62,7 +61,7 @@ public class ScreenDiamondGenerator extends ContainerScreen<ContainerDiamondGene
         this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
 
         // Render the tooltip for energy bar
-        if (this.isMouseOver(mouseX, mouseY, ENERGY_BAR_X, ENERGY_BAR_Y, ENERGY_BAR_WIDTH, ENERGY_BAR_HEIGHT)) { AdditionalThings.LOGGER.info("Mouse Over!!!");
+        if (this.isMouseOver(mouseX, mouseY, ENERGY_BAR_X, ENERGY_BAR_Y, ENERGY_BAR_WIDTH, ENERGY_BAR_HEIGHT)) {
             String text = this.container.getEnergy() + " / " + TileentityDiamondGenerator.CAPACITY;
             this.renderTooltip(matrixStack, new StringTextComponent(text), mouseX, mouseY);
         }

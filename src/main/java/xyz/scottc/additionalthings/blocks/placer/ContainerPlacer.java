@@ -14,13 +14,15 @@ import xyz.scottc.additionalthings.registries.ContainerTypeRegistry;
 
 public class ContainerPlacer extends Container {
 
-    private final TileentityPlacer tile;
+    public final TileentityPlacer tile;
 
     public ContainerPlacer(int id, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player) {
         super(ContainerTypeRegistry.PLACER.get(), id);
         this.tile = (TileentityPlacer) world.getTileEntity(pos);
 
         if (tile != null) {
+            this.trackIntArray(this.tile.data);
+
             // The slot in this one-slot machine
             this.addSlot(new Slot(tile.getInventory(), 0, 80, 41));
 

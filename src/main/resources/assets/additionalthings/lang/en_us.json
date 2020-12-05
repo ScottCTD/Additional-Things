@@ -10,5 +10,6 @@
   "item.additionalthings.diamond_generator": "Diamond Generator",
 
   "screen.additionalthings.placer": "Placer",
+  "button.additionalthings.placer.start": "Toggle Enable",
   "screen.additionalthings.diamond_generator": "Diamond Generator"
 }

@@ -68,6 +68,7 @@ public class ContainerDiamondGenerator extends Container {
 
     // Sync the energy in the server and the client side
     // No longer used, switching to the IIntArray
+    @Deprecated
     private void syncEnergy() {
         // 这个负责传输后16位int
         this.trackInt(new IntReferenceHolder() {

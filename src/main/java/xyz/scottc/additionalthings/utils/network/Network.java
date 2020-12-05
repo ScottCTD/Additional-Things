@@ -20,11 +20,12 @@ public class Network {
     );
 
     public static void registerMessages() {
-        INSTANCE.messageBuilder(PacketEnergySync.class, nextID())
-                .encoder(PacketEnergySync::encode)
-                .decoder(PacketEnergySync::decode)
-                .consumer(PacketEnergySync::handle)
+        INSTANCE.messageBuilder(PacketStartPlacer.class, nextID())
+                .encoder(PacketStartPlacer::encode)
+                .decoder(PacketStartPlacer::new)
+                .consumer(PacketStartPlacer::handle)
                 .add();
+
     }
 
     private static int nextID() {

@@ -30,6 +30,9 @@ public class AdditionalThings {
     };
 
     public AdditionalThings() {
+        // Register ourselves for server and other game events we are interested in
+        MinecraftForge.EVENT_BUS.register(this);
+
         // Load Config
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.CLIENT_CONFIG);
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_CONFIG);
@@ -37,9 +40,6 @@ public class AdditionalThings {
         final IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.addListener(this::doClientStuff);
         bus.addListener(this::setup);
-
-        // Register ourselves for server and other game events we are interested in
-        MinecraftForge.EVENT_BUS.register(this);
 
         // Register Containers
         ContainerTypeRegistry.CONTAINERS.register(bus);
