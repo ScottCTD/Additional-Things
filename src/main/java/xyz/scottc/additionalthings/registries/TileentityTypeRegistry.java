@@ -8,6 +8,7 @@ import xyz.scottc.additionalthings.AdditionalThings;
 import xyz.scottc.additionalthings.blocks.breaker.TileentityBreaker;
 import xyz.scottc.additionalthings.blocks.diamondgenerator.TileentityDiamondGenerator;
 import xyz.scottc.additionalthings.blocks.placer.TileentityPlacer;
+import xyz.scottc.additionalthings.blocks.treecutter.TileentityTreeCutter;
 
 public class TileentityTypeRegistry {
 
@@ -20,4 +21,7 @@ public class TileentityTypeRegistry {
             () -> TileEntityType.Builder.create(TileentityPlacer::new, BlockRegistry.PLACER.get()).build(null));
     public static final RegistryObject<TileEntityType<TileentityDiamondGenerator>> DIAMOND_GENERATOR = TILEENTITIES.register("diamond_generator",
             () -> TileEntityType.Builder.create(TileentityDiamondGenerator::new, BlockRegistry.DIAMOND_GENERATOR.get()).build(null));
+    public static final RegistryObject<TileEntityType<TileentityTreeCutter>> TREE_CUTTER = TILEENTITIES.register("tree_cutter",
+            () -> TileEntityType.Builder.create(TileentityTreeCutter::new, BlockRegistry.TREE_CUTTER.get()).build(null));
+
 }

@@ -23,4 +23,6 @@ public class ItemRegistry {
             () -> new BlockItem(BlockRegistry.PLACER.get(), new Item.Properties().group(AdditionalThings.ITEM_TABLE)));
     public static final RegistryObject<Item> DIAMOND_GENERATOR = ITEMS.register("diamond_generator",
             () -> new BlockItem(BlockRegistry.DIAMOND_GENERATOR.get(), new Item.Properties().group(AdditionalThings.ITEM_TABLE)));
+    public static final RegistryObject<Item> TREE_CUTTER = ITEMS.register("tree_cutter",
+            () -> new BlockItem(BlockRegistry.TREE_CUTTER.get(), new Item.Properties().group(AdditionalThings.ITEM_TABLE)));
 }

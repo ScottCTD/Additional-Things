@@ -1,9 +1,12 @@
 package xyz.scottc.additionalthings;
 
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber
+/**
+ * 要动态获取值一定要直接调用Config.属性
+ * 或者监听loading和reload event在那个时候赋值
+ * 这两个event是MOD bus下的
+ */
 public class Config {
 
     public static ForgeConfigSpec SERVER_CONFIG;
@@ -22,7 +25,6 @@ public class Config {
             public static ForgeConfigSpec.IntValue DIAMOND_GENERATOR_TICKS_PER_DIAMOND;
 
     static {
-
         // Setup client config
         CLIENT_BUILDER.comment("General Settings").push(CATAGORY01_GENERAL);
 
