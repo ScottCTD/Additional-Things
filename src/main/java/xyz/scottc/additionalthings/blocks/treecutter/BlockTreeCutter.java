@@ -20,8 +20,6 @@ import net.minecraftforge.common.ToolType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import static xyz.scottc.additionalthings.blocks.treecutter.TileentityTreeCutter.WORKING_RADIUS;
-
 public class BlockTreeCutter extends Block {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -42,43 +40,8 @@ public class BlockTreeCutter extends Block {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof TileentityTreeCutter) {
             TileentityTreeCutter treeCutter = (TileentityTreeCutter) tileEntity;
-            treeCutter.workingArea = this.initWorkingRange(pos, state);
+            treeCutter.workingArea = TileentityTreeCutter.getWorkingArea(pos, state);
         }
-    }
-
-    private BlockPos[] initWorkingRange(BlockPos selfPos, BlockState state) {
-        BlockPos[] result = new BlockPos[(WORKING_RADIUS * 2 + 1) * (WORKING_RADIUS * 2 + 1)];
-        int minX = selfPos.getX() - WORKING_RADIUS;
-        int maxX = selfPos.getX() + WORKING_RADIUS;
-        int minZ = selfPos.getZ() - WORKING_RADIUS;
-        int maxZ = selfPos.getZ() + WORKING_RADIUS;
-        switch (state.get(FACING)) {
-            case NORTH:
-                maxZ = selfPos.getZ() - 1;
-                minZ = selfPos.getZ() - (WORKING_RADIUS * 2 + 1);
-                break;
-            case SOUTH:
-                minZ = selfPos.getZ() + 1;
-                maxZ = selfPos.getZ() + (WORKING_RADIUS * 2 + 1);
-                break;
-            case EAST:
-                minX = selfPos.getX() + 1;
-                maxX = selfPos.getX() + (WORKING_RADIUS * 2 + 1);
-                break;
-            case WEST:
-                maxX = selfPos.getX() - 1;
-                minX = selfPos.getX() - (WORKING_RADIUS * 2 + 1);
-                break;
-        }
-        int y = selfPos.getY();
-        int index = 0;
-        for (int i = minX; i <= maxX; i++) {
-            for (int j = minZ; j <= maxZ; j++) {
-                result[index] = new BlockPos(i, y, j);
-                index++;
-            }
-        }
-        return result;
     }
 
     @Override

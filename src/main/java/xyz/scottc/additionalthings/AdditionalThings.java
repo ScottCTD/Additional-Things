@@ -56,6 +56,7 @@ public class AdditionalThings {
     }
 
     private void doClientStuff(final FMLClientSetupEvent event) {
+        RendererRegistry.register();
         ScreenRegistry.register();
     }
 

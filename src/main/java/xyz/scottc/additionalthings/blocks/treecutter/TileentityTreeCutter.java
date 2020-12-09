@@ -3,23 +3,31 @@ package xyz.scottc.additionalthings.blocks.treecutter;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import xyz.scottc.additionalthings.registries.TileentityTypeRegistry;
 
 public class TileentityTreeCutter extends TileEntity implements ITickableTileEntity {
 
-    public static final int WORKING_RADIUS = 2;
+    public static final int WORKING_RADIUS = 8;
     public static final int TICKS_PER_TREE = 20 * 3;
     public static final int TICKS_DETECT_GAP = 1;
 
     public BlockPos[] workingArea;
+    public boolean renderRange;
 
     private int gap = 0;
     private int counter = 0;
-    private int workingIndex = 0;
+    public int workingIndex = 0;
 
     public TileentityTreeCutter() {
         super(TileentityTypeRegistry.TREE_CUTTER.get());
@@ -29,8 +37,10 @@ public class TileentityTreeCutter extends TileEntity implements ITickableTileEnt
     public void tick() {
         if (this.world == null || this.workingArea == null) return;
         if (this.world.isRemote) return;
+        this.renderRange = this.world.isBlockPowered(this.pos);
+        this.world.notifyBlockUpdate(this.pos, this.getBlockState(), this.getBlockState(), 2);
         this.gap++;
-        this.getBlockState().with(BlockTreeCutter.START, false);
+        this.world.setBlockState(this.pos, this.getBlockState().with(BlockTreeCutter.START, false));
         if (this.gap < TICKS_DETECT_GAP) return;
         if (this.workingIndex > this.workingArea.length - 1) this.workingIndex = 0;
         BlockPos targetPos = this.workingArea[this.workingIndex];
@@ -41,10 +51,12 @@ public class TileentityTreeCutter extends TileEntity implements ITickableTileEnt
             this.workingIndex++;
             return;
         }
-        this.getBlockState().with(BlockTreeCutter.START, true);
+        this.world.setBlockState(this.pos, this.getBlockState().with(BlockTreeCutter.START, true));
         this.counter++;
         if (this.counter >= TICKS_PER_TREE) {
             this.cutTree(targetPos);
+            this.workingIndex++;
+            this.counter = 0;
             this.gap = 0;
         }
     }
@@ -56,7 +68,6 @@ public class TileentityTreeCutter extends TileEntity implements ITickableTileEnt
         Block upBlock = this.world.getBlockState(up).getBlock();
         BlockPos[] temp = {from.north(), from.south(), from.east(), from.west(), from.north().east(), from.north().west(), from.south().east(), from.south().west()
                 , up.north(), up.south(), up.east(), up.west(), up.north().east(), up.north().west(), up.south().east(), up.south().west()};
-        // 分出一个线程砍周围的（四周的八个加上上面的八个）
         for (BlockPos blockPos : temp) {
             if (this.isLog(this.world.getBlockState(blockPos).getBlock())) {
                 this.world.destroyBlock(blockPos, true);
@@ -64,9 +75,6 @@ public class TileentityTreeCutter extends TileEntity implements ITickableTileEnt
                 /*Thread thread = new Thread(() -> this.cutTree(blockPos));
                 thread.start();*/
                 this.cutTree(blockPos);
-                try {
-                    Thread.sleep(0);
-                } catch (InterruptedException ignored) {}
             }
         }
         this.world.destroyBlock(from, true);
@@ -79,13 +87,86 @@ public class TileentityTreeCutter extends TileEntity implements ITickableTileEnt
         return target.isIn(BlockTags.LOGS) || target.getTags().contains(BlockTags.LOGS.getName());
     }
 
+    public static BlockPos[] getWorkingArea(BlockPos selfPos, BlockState state) {
+        BlockPos[] result = new BlockPos[(WORKING_RADIUS * 2 + 1) * (WORKING_RADIUS * 2 + 1)];
+        int minX = selfPos.getX() - WORKING_RADIUS;
+        int maxX = selfPos.getX() + WORKING_RADIUS;
+        int minZ = selfPos.getZ() - WORKING_RADIUS;
+        int maxZ = selfPos.getZ() + WORKING_RADIUS;
+        switch (state.get(BlockTreeCutter.FACING)) {
+            case NORTH:
+                maxZ = selfPos.getZ() - 1;
+                minZ = selfPos.getZ() - (WORKING_RADIUS * 2 + 1);
+                break;
+            case SOUTH:
+                minZ = selfPos.getZ() + 1;
+                maxZ = selfPos.getZ() + (WORKING_RADIUS * 2 + 1);
+                break;
+            case EAST:
+                minX = selfPos.getX() + 1;
+                maxX = selfPos.getX() + (WORKING_RADIUS * 2 + 1);
+                break;
+            case WEST:
+                maxX = selfPos.getX() - 1;
+                minX = selfPos.getX() - (WORKING_RADIUS * 2 + 1);
+                break;
+        }
+        int y = selfPos.getY();
+        int index = 0;
+        for (int i = minX; i <= maxX; i++) {
+            for (int j = minZ; j <= maxZ; j++) {
+                result[index] = new BlockPos(i, y, j);
+                index++;
+            }
+        }
+        return result;
+    }
+
     @Override
-    public void read(BlockState state, CompoundNBT nbt) {
+    @OnlyIn(Dist.CLIENT)
+    public AxisAlignedBB getRenderBoundingBox() {
+        return TileEntity.INFINITE_EXTENT_AABB;
+    }
+
+    @Override
+    public void read(@NotNull BlockState state, @NotNull CompoundNBT nbt) {
+        this.gap = nbt.getInt("gap");
+        this.counter = nbt.getInt("counter");
+        this.workingIndex = nbt.getInt("workingIndex");
+        this.renderRange = nbt.getBoolean("renderRange");
         super.read(state, nbt);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
+    public @NotNull CompoundNBT write(@NotNull CompoundNBT compound) {
+        compound.putInt("gap", this.gap);
+        compound.putInt("counter", this.counter);
+        compound.putInt("workingIndex", this.workingIndex);
+        compound.putBoolean("renderRange", this.renderRange);
         return super.write(compound);
+    }
+
+    // called to generate NBT for a syncing packet when a client loads a chunk that this TE is in
+    @Override
+    public CompoundNBT getUpdateTag() {
+        return this.write(new CompoundNBT());
+    }
+
+    // we can sync a TileEntity from the server to all tracking clients by calling world.notifyBlockUpdate
+    // when that happens, this method is called on the server to generate a packet to send to the client
+    // if you have lots of data, it's a good idea to keep track of which data has changed since the last time
+    // this TE was synced, and then only send the changed data;
+    // this reduces the amount of packets sent, which is good
+    // we only have one value to sync so we'll just write everything into the NBT again
+    @Nullable
+    @Override
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(this.getPos(), 0, this.getUpdateTag());
+    }
+
+    // this method gets called on the client when it receives the packet that was sent in the previous method
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        this.read(this.getBlockState(), pkt.getNbtCompound());
     }
 }

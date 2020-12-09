@@ -25,7 +25,6 @@ public class Network {
                 .decoder(PacketStartPlacer::new)
                 .consumer(PacketStartPlacer::handle)
                 .add();
-
     }
 
     private static int nextID() {
