@@ -19,6 +19,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import xyz.scottc.additionalthings.utils.ShapeUtils;
+
+import static xyz.scottc.additionalthings.blocks.treecutter.TileentityTreeCutter.WORKING_RADIUS;
 
 public class BlockTreeCutter extends Block {
 
@@ -40,7 +43,7 @@ public class BlockTreeCutter extends Block {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
         if (tileEntity instanceof TileentityTreeCutter) {
             TileentityTreeCutter treeCutter = (TileentityTreeCutter) tileEntity;
-            treeCutter.workingArea = TileentityTreeCutter.getWorkingArea(pos, state);
+            treeCutter.workingArea = ShapeUtils.getSquareInFrontOf(pos, state, WORKING_RADIUS);
         }
     }
 

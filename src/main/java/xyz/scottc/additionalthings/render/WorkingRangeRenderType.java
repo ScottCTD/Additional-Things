@@ -15,7 +15,7 @@ public class WorkingRangeRenderType extends RenderType {
     public static RenderType SOLID_COLOUR = makeType("solidColour",
             DefaultVertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256,
             RenderType.State.getBuilder()
-                    .transparency(ADDITIVE_TRANSPARENCY)
+                    .transparency(TRANSLUCENT_TRANSPARENCY)
                     .texture(NO_TEXTURE)
                     .depthTest(DEPTH_LEQUAL)
                     .cull(CULL_DISABLED)
