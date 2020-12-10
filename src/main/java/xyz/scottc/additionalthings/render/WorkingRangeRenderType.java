@@ -21,5 +21,5 @@ public class WorkingRangeRenderType extends RenderType {
                     .cull(CULL_DISABLED)
                     .lightmap(LIGHTMAP_DISABLED)
                     .writeMask(COLOR_DEPTH_WRITE)
-                    .build(true));
+                    .build(false));
 }
