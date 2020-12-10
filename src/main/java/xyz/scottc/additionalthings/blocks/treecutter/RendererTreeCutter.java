@@ -26,7 +26,6 @@ public class RendererTreeCutter extends TileEntityRenderer<TileentityTreeCutter>
         if (tileEntityIn.renderRange) {
             matrixStackIn.push();
             BlockPos self = tileEntityIn.getPos();
-            // TODO 这玩意还是不理解为啥要平移才能得到正常的位置
             matrixStackIn.translate(-self.getX(), -self.getY(), -self.getZ());
             IVertexBuilder builder = bufferIn.getBuffer(WorkingRangeRenderType.SOLID_COLOUR);
             BlockPos[] workingArea = TileentityTreeCutter.getWorkingArea(tileEntityIn.getPos(), tileEntityIn.getBlockState());
@@ -43,8 +42,6 @@ public class RendererTreeCutter extends TileEntityRenderer<TileentityTreeCutter>
                     color = new Color(1, 1, 1, 25);
                 }
 
-                // TODO 诡异的透明度问题
-                float r = color.getRed() / 255F, g = color.getGreen() / 255F, b = color.getBlue() / 255F, a = 0.1F;
                 float r = color.getRed(), g = color.getGreen(), b = color.getBlue(), a = color.getAlpha();
                 builder.pos(positionMatric, startX, startY, startZ).color(r, g, b, a).endVertex();
                 builder.pos(positionMatric, startX, startY, endZ).color(r, g, b, a).endVertex();
