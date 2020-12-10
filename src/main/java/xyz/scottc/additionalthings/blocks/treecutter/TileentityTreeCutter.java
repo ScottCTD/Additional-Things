@@ -20,7 +20,7 @@ public class TileentityTreeCutter extends TileEntity implements ITickableTileEnt
 
     public static final int WORKING_RADIUS = 8;
     public static final int TICKS_PER_TREE = 20 * 3;
-    public static final int TICKS_DETECT_GAP = 1;
+    public static final int TICKS_DETECT_GAP = 20 * 3;
 
     public BlockPos[] workingArea;
     public boolean renderRange;

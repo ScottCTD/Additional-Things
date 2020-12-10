@@ -37,12 +37,12 @@ public class RendererTreeCutter extends TileEntityRenderer<TileentityTreeCutter>
                 Matrix4f positionMatric = matrixStackIn.getLast().getMatrix();
                 float startX = 0, startY = 0, startZ = 0, endX = 1, endY = 1, endZ = 1;
 
-                Color color = new Color(220, 220, 220, 25);
+                Color color = new Color(230, 230, 230, 25);
                 if (i == tileEntityIn.workingIndex) {
-                    color = new Color(218, 40, 40, 25);
+                    color = new Color(1, 1, 1, 25);
                 }
 
-                float r = color.getRed() / 255F, g = color.getGreen() / 255F, b = color.getBlue() / 255F, a = color.getAlpha() / 255F;
+                float r = color.getRed(), g = color.getGreen(), b = color.getBlue(), a = color.getAlpha();
                 builder.pos(positionMatric, startX, startY, startZ).color(r, g, b, a).endVertex();
                 builder.pos(positionMatric, startX, startY, endZ).color(r, g, b, a).endVertex();
                 builder.pos(positionMatric, endX, startY, endZ).color(r, g, b, a).endVertex();
