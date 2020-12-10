@@ -6,13 +6,22 @@ import net.minecraft.util.math.BlockPos;
 
 public class ShapeUtils {
 
-    public static BlockPos[] getSquareInFrontOf(BlockPos self, BlockState state, final int radius) {
+    public static BlockPos getCenterBlockPos(BlockPos self, BlockState selfState, int radius) {
+        if (selfState.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+            return self.offset(selfState.get(BlockStateProperties.HORIZONTAL_FACING), radius + 1);
+        } else if (selfState.hasProperty(BlockStateProperties.FACING)) {
+            return self.offset(selfState.get(BlockStateProperties.FACING), radius + 1);
+        }
+        return null;
+    }
+
+    public static BlockPos[] getSquareInFrontOf(BlockPos self, BlockState selfState, int radius) {
         BlockPos[] result = new BlockPos[(radius * 2 + 1) * (radius * 2 + 1)];
         int minX = self.getX() - radius;
         int maxX = self.getX() + radius;
         int minZ = self.getZ() - radius;
         int maxZ = self.getZ() + radius;
-        switch (state.get(BlockStateProperties.HORIZONTAL_FACING)) {
+        switch (selfState.get(BlockStateProperties.HORIZONTAL_FACING)) {
             case NORTH:
                 maxZ = self.getZ() - 1;
                 minZ = self.getZ() - (radius * 2 + 1);

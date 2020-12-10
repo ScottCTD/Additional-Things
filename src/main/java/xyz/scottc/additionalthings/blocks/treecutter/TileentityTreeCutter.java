@@ -14,7 +14,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xyz.scottc.additionalthings.AdditionalThings;
 import xyz.scottc.additionalthings.registries.TileentityTypeRegistry;
 
 public class TileentityTreeCutter extends TileEntity implements ITickableTileEntity {
@@ -47,7 +46,6 @@ public class TileentityTreeCutter extends TileEntity implements ITickableTileEnt
         BlockPos targetPos = this.workingArea[this.workingIndex];
         BlockState targetBlockState = this.world.getBlockState(targetPos);
         Block targetBlock = targetBlockState.getBlock();
-        AdditionalThings.LOGGER.info(targetPos.toString());
         if (!this.isLog(targetBlock)) {
             this.gap = 0;
             this.workingIndex++;

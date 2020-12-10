@@ -7,6 +7,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import xyz.scottc.additionalthings.AdditionalThings;
 import xyz.scottc.additionalthings.blocks.breaker.TileentityBreaker;
 import xyz.scottc.additionalthings.blocks.diamondgenerator.TileentityDiamondGenerator;
+import xyz.scottc.additionalthings.blocks.itemcollector.TileentityItemCollector;
 import xyz.scottc.additionalthings.blocks.placer.TileentityPlacer;
 import xyz.scottc.additionalthings.blocks.treecutter.TileentityTreeCutter;
 
@@ -23,5 +24,7 @@ public class TileentityTypeRegistry {
             () -> TileEntityType.Builder.create(TileentityDiamondGenerator::new, BlockRegistry.DIAMOND_GENERATOR.get()).build(null));
     public static final RegistryObject<TileEntityType<TileentityTreeCutter>> TREE_CUTTER = TILEENTITIES.register("tree_cutter",
             () -> TileEntityType.Builder.create(TileentityTreeCutter::new, BlockRegistry.TREE_CUTTER.get()).build(null));
+    public static final RegistryObject<TileEntityType<TileentityItemCollector>> ITEM_COLLECTOR = TILEENTITIES.register("item_collector",
+            () -> TileEntityType.Builder.create(TileentityItemCollector::new, BlockRegistry.ITEM_COLLECTOR.get()).build(null));
 
 }
