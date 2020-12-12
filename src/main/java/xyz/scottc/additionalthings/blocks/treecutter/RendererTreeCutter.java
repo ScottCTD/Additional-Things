@@ -7,43 +7,35 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import xyz.scottc.additionalthings.render.WorkingRangeRenderType;
 import xyz.scottc.additionalthings.utils.RenderUtils;
 import xyz.scottc.additionalthings.utils.ShapeUtils;
 
 import java.awt.*;
 
-import static xyz.scottc.additionalthings.blocks.treecutter.TileentityTreeCutter.WORKING_RADIUS;
-
-@OnlyIn(Dist.CLIENT)
 public class RendererTreeCutter extends TileEntityRenderer<TileentityTreeCutter> {
 
     public RendererTreeCutter(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
     }
 
-    private BlockPos[] workingArea;
-
     @Override
     public void render(TileentityTreeCutter tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn,
                        int combinedLightIn, int combinedOverlayIn) {
         if (tileEntityIn.renderRange) {
+
             //GlStateManager.color4f(1, 1, 1, 1); 复原状态
             matrixStackIn.push();
             BlockPos self = tileEntityIn.getPos();
             matrixStackIn.translate(-self.getX(), -self.getY(), -self.getZ());
             IVertexBuilder builder = bufferIn.getBuffer(WorkingRangeRenderType.SOLID_COLOUR);
 
-            if (this.workingArea == null) {
-                this.workingArea = ShapeUtils.getSquareInFrontOf(tileEntityIn.getPos(), tileEntityIn.getBlockState(), WORKING_RADIUS);
-            }
+            BlockPos[] workingArea = ShapeUtils.getSquareInFrontOf(tileEntityIn.getPos(), tileEntityIn.getBlockState(), TileentityTreeCutter.WORKING_RADIUS);
 
-            for (int i = 0; i < this.workingArea.length; i++) {
+            for (int i = 0; i < workingArea.length; i++) {
                 matrixStackIn.push();
                 float scale = 0.7F, margin = (1 - scale) / 2;
-                matrixStackIn.translate(this.workingArea[i].getX() + margin, this.workingArea[i].getY() + margin, this.workingArea[i].getZ() + margin);
+                matrixStackIn.translate(workingArea[i].getX() + margin, workingArea[i].getY() + margin, workingArea[i].getZ() + margin);
                 matrixStackIn.scale(scale, scale, scale);
                 Matrix4f positionMatric = matrixStackIn.getLast().getMatrix();
 

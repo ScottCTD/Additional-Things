@@ -20,7 +20,7 @@ import xyz.scottc.additionalthings.utils.ATEnergyStorage;
 
 public class ContainerDiamondGenerator extends Container {
 
-    private final TileentityDiamondGenerator tile;
+    public final TileentityDiamondGenerator tile;
 
     public ContainerDiamondGenerator(int id, World world, BlockPos pos, PlayerInventory playerInv, PlayerEntity player) {
         super(ContainerTypeRegistry.DIAMOND_GENERATOR.get(), id);

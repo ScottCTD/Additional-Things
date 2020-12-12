@@ -1,6 +1,6 @@
 package xyz.scottc.additionalthings.utils;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.util.math.vector.Matrix4f;
 
@@ -14,7 +14,7 @@ public class RenderUtils {
 
     public static void renderGroundPanel(IVertexBuilder builder, Matrix4f positionMatrix, Color defaultColor, boolean isHighlighted, Color highlightedColor) {
         // 复原状态
-        GlStateManager.color4f(1, 1, 1, 1);
+        RenderSystem.color4f(1, 1, 1, 1);
         float startX = 0, startY = 0, startZ = 0, endX = 1, endY = 1, endZ = 1;
         float r = defaultColor.getRed() / 255F, g = defaultColor.getGreen() / 255F, b = defaultColor.getBlue() / 255F, a = defaultColor.getAlpha() / 255F;
         if (isHighlighted) {

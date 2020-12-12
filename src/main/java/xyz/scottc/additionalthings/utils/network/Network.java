@@ -25,6 +25,11 @@ public class Network {
                 .decoder(PacketStartPlacer::new)
                 .consumer(PacketStartPlacer::handle)
                 .add();
+        INSTANCE.messageBuilder(PacketToggleEnergyOutputDirection.class, nextID())
+                .encoder(PacketToggleEnergyOutputDirection::encode)
+                .decoder(PacketToggleEnergyOutputDirection::new)
+                .consumer(PacketToggleEnergyOutputDirection::handle)
+                .add();
     }
 
     private static int nextID() {

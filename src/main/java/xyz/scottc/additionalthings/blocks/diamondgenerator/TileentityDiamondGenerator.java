@@ -51,6 +51,7 @@ public class TileentityDiamondGenerator extends TileEntity implements ITickableT
     @Override
     public void tick() {
         if (this.world != null && !this.world.isRemote) {
+            if (this.data.energyOutputDirections == null) this.data.energyOutputDirections = new int[] {0, 0, 0, 0, 0, 0};
             this.data.set(DataDiamondGenerator.ENERGY_INDEX, this.energyStorage.getEnergyStored());
             /*
             counter = 0 -> Not started yet
@@ -85,36 +86,62 @@ public class TileentityDiamondGenerator extends TileEntity implements ITickableT
                     }
                     this.counter = 0;
                 }
+            } else {
+                this.world.setBlockState(this.pos, blockState.with(BlockDiamondGenerator.START, false));
             }
 
-            // 向外push能量
-            this.pushEnergy();
         }
+        // 向外push能量
+        this.pushEnergy();
     }
 
     private void pushEnergy() {
         if (this.world != null) {
             AtomicInteger availableEnergy = new AtomicInteger(this.energyStorage.getEnergyStored());
             if (availableEnergy.get() > 0) {
-                // 获取当前机器每个方向的机器，然后push能量
-                for (Direction direction : Direction.values()) {
-                    // 获取目标机器
-                    TileEntity target = this.world.getTileEntity(this.pos.offset(direction));
-                    if (target != null) {
-                        // 如果有机器，就获取他的capability然后输送能量
-                        LazyOptional<IEnergyStorage> capability = target.getCapability(CapabilityEnergy.ENERGY, direction);
-                        capability.ifPresent(iEnergyStorage -> {
-                            if (iEnergyStorage.canReceive()) {
-                                // 目标机器接收到了能量
-                                int received = iEnergyStorage.receiveEnergy(Math.min(availableEnergy.get(), MAX_TRANSFER_PER_TICK), false);
-                                // 减少当前机器的能量
-                                availableEnergy.getAndAdd(-received);
-                                this.energyStorage.setEnergy(availableEnergy.get());
-                            }
-                        });
+                // 获取当前机器哪个方向要push
+                for (int i = 0; i < data.energyOutputDirections.length; i++) {
+                    Direction direction = null;
+                    if (data.energyOutputDirections[i] != 0) {
+                        switch (i) {
+                            case 0:
+                                direction = Direction.DOWN;
+                                break;
+                            case 1:
+                                direction = Direction.UP;
+                                break;
+                            case 2:
+                                direction = Direction.NORTH;
+                                break;
+                            case 3:
+                                direction = Direction.SOUTH;
+                                break;
+                            case 4:
+                                direction = Direction.WEST;
+                                break;
+                            case 5:
+                                direction = Direction.EAST;
+                                break;
+                        }
+                        AdditionalThings.LOGGER.info(direction.toString());
+                        // 获取目标机器
+                        TileEntity target = this.world.getTileEntity(this.pos.offset(direction));
+                        if (target != null) {
+                            // 如果有机器，就获取他的capability然后输送能量
+                            LazyOptional<IEnergyStorage> capability = target.getCapability(CapabilityEnergy.ENERGY, direction);
+                            capability.ifPresent(iEnergyStorage -> {
+                                if (iEnergyStorage.canReceive()) {
+                                    // 目标机器接收到了能量
+                                    int received = iEnergyStorage.receiveEnergy(Math.min(availableEnergy.get(), MAX_TRANSFER_PER_TICK), false);
+                                    // 减少当前机器的能量
+                                    availableEnergy.getAndAdd(-received);
+                                    this.energyStorage.setEnergy(availableEnergy.get());
+                                }
+                            });
+                        }
+                        // 如果当前机器没能量了，就return
+                        if (availableEnergy.get() <= 0) return;
                     }
-                    // 如果当前机器没能量了，就return
-                    if (availableEnergy.get() <= 0) return;
                 }
             }
         }
