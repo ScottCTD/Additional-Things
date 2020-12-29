@@ -16,7 +16,7 @@ import xyz.scottc.additionalthings.registries.TileentityTypeRegistry;
 
 public class TileentityTreeCutter extends TileEntity implements ITickableTileEntity {
 
-    public static final int WORKING_RADIUS = 8;
+    public static final int WORKING_RADIUS = 5;
     public static final int TICKS_PER_TREE = 20 * 3;
     public static final int TICKS_DETECT_GAP = 5;
 
@@ -110,7 +110,7 @@ public class TileentityTreeCutter extends TileEntity implements ITickableTileEnt
 
     // called to generate NBT for a syncing packet when a client loads a chunk that this TE is in
     @Override
-    public CompoundNBT getUpdateTag() {
+    public @NotNull CompoundNBT getUpdateTag() {
         return this.write(new CompoundNBT());
     }
 

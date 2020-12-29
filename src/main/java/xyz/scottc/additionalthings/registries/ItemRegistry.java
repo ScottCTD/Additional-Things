@@ -7,6 +7,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import xyz.scottc.additionalthings.AdditionalThings;
 import xyz.scottc.additionalthings.items.CopperIngot;
+import xyz.scottc.additionalthings.items.InfiniteSword;
 
 public class ItemRegistry {
 
@@ -15,6 +16,7 @@ public class ItemRegistry {
 
     // Item
     public static final RegistryObject<Item> COPPER_INGOT = ITEMS.register("copper_ingot", CopperIngot::new);
+    public static final RegistryObject<Item> INFINITE_SWORD = ITEMS.register("infinite_sword", InfiniteSword::new);
 
     // BlockItem
     public static final RegistryObject<Item> BREAKER = ITEMS.register("breaker",

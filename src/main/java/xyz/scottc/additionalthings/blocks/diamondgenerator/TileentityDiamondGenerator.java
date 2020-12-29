@@ -123,7 +123,6 @@ public class TileentityDiamondGenerator extends TileEntity implements ITickableT
                                 direction = Direction.EAST;
                                 break;
                         }
-                        AdditionalThings.LOGGER.info(direction.toString());
                         // 获取目标机器
                         TileEntity target = this.world.getTileEntity(this.pos.offset(direction));
                         if (target != null) {
