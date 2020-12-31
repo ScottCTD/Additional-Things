@@ -1,4 +1,4 @@
-package xyz.scottc.additionalthings.utils.network;
+package xyz.scottc.additionalthings.utils;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.IIntArray;

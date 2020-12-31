@@ -1,7 +1,7 @@
 package xyz.scottc.additionalthings.blocks.placer;
 
 import net.minecraft.nbt.CompoundNBT;
-import xyz.scottc.additionalthings.utils.network.IATIntArray;
+import xyz.scottc.additionalthings.utils.IATIntArray;
 
 public class DataPlacer implements IATIntArray {
 

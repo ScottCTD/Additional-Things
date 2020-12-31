@@ -1,7 +1,7 @@
 package xyz.scottc.additionalthings.blocks.diamondgenerator;
 
 import net.minecraft.nbt.CompoundNBT;
-import xyz.scottc.additionalthings.utils.network.IATIntArray;
+import xyz.scottc.additionalthings.utils.IATIntArray;
 
 public class DataDiamondGenerator implements IATIntArray {
 

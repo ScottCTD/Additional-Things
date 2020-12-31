@@ -30,6 +30,11 @@ public class Network {
                 .decoder(PacketToggleEnergyOutputDirection::new)
                 .consumer(PacketToggleEnergyOutputDirection::handle)
                 .add();
+        INSTANCE.messageBuilder(PacketOpenGui.class, nextID())
+                .encoder(PacketOpenGui::encode)
+                .decoder(PacketOpenGui::new)
+                .consumer(PacketOpenGui::handle)
+                .add();
     }
 
     private static int nextID() {

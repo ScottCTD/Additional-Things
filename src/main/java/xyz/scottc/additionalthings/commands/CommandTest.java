@@ -6,8 +6,8 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
-import net.minecraft.util.text.TranslationTextComponent;
-import xyz.scottc.additionalthings.AdditionalThings;
+import xyz.scottc.additionalthings.utils.network.Network;
+import xyz.scottc.additionalthings.utils.network.PacketOpenGui;
 
 public class CommandTest implements Command<CommandSource> {
 
@@ -21,8 +21,7 @@ public class CommandTest implements Command<CommandSource> {
 
     @Override
     public int run(CommandContext<CommandSource> context) {
-        context.getSource().sendFeedback(new TranslationTextComponent(
-                "message." + AdditionalThings.MODID + ".command.test"), true);
+        Network.sendToServer(new PacketOpenGui());
         return 0;
     }
 
